@@ -1,7 +1,6 @@
 import unittest
 
-from textnode import TextNode, TextType
-from htmlnode import HTMLNode
+from textnode import TextNode, TextType, text_node_to_html_node
 
 
 class TestTextNode(unittest.TestCase):
@@ -29,22 +28,22 @@ class TestTextNode(unittest.TestCase):
       TextNode("Hello", "other type")
 
     text_node = TextNode("Hello", TextType.TEXT)
-    self.assertEqual(text_node.text_node_to_html_node().to_html(), "Hello")
+    self.assertEqual(text_node_to_html_node(text_node).to_html(), "Hello")
 
     bold_node = TextNode("Hello", TextType.BOLD)
-    self.assertEqual(bold_node.text_node_to_html_node().to_html(), "<b>Hello</b>")
+    self.assertEqual(text_node_to_html_node(bold_node).to_html(), "<b>Hello</b>")
 
     italic_node = TextNode("Hello", TextType.ITALIC)
-    self.assertEqual(italic_node.text_node_to_html_node().to_html(), "<i>Hello</i>")
+    self.assertEqual(text_node_to_html_node(italic_node).to_html(), "<i>Hello</i>")
 
     code_node = TextNode("Hello", TextType.CODE)
-    self.assertEqual(code_node.text_node_to_html_node().to_html(), "<code>Hello</code>")
+    self.assertEqual(text_node_to_html_node(code_node).to_html(), "<code>Hello</code>")
 
     link_node = TextNode("Hello", TextType.LINK, "https://boot.dev")
-    self.assertEqual(link_node.text_node_to_html_node().to_html(), '<a href="https://boot.dev">Hello</a>')
+    self.assertEqual(text_node_to_html_node(link_node).to_html(), '<a href="https://boot.dev">Hello</a>')
 
     image_node = TextNode("Hello", TextType.IMAGE, "https://boot.dev")
-    self.assertEqual(image_node.text_node_to_html_node().to_html(), '<img src="https://boot.dev" alt="Hello"></img>')
+    self.assertEqual(text_node_to_html_node(image_node).to_html(), '<img src="https://boot.dev" alt="Hello"></img>')
 
 
 if __name__ == "__main__":
