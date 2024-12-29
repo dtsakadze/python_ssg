@@ -1,6 +1,6 @@
 import unittest
 
-from helpers import split_nodes_delimiter, extract_markdown_images, extract_markdown_links
+from helpers import split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link
 from textnode import TextType, TextNode
 
 
@@ -29,6 +29,38 @@ class TestHelpers(unittest.TestCase):
     text = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
     links = extract_markdown_links(text)
     self.assertEqual(links, [("to boot dev", "https://www.boot.dev"), ("to youtube", "https://www.youtube.com/@bootdotdev")])
+
+  def test_split_nodes_image(self):
+    node = TextNode(
+      "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)",
+      TextType.TEXT,
+    )
+    new_nodes = split_nodes_image([node])
+    self.assertEqual(
+      new_nodes,
+      [
+        TextNode("This is text with a ", TextType.TEXT),
+        TextNode("rick roll", TextType.IMAGE, "https://i.imgur.com/aKaOqIh.gif"),
+        TextNode(" and ", TextType.TEXT),
+        TextNode("obi wan", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+      ],
+    )
+
+  def test_split_nodes_link(self):
+    node = TextNode(
+      "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)",
+      TextType.TEXT,
+    )
+    new_nodes = split_nodes_link([node])
+    self.assertEqual(
+      new_nodes,
+      [
+        TextNode("This is text with a link ", TextType.TEXT),
+        TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"),
+        TextNode(" and ", TextType.TEXT),
+        TextNode("to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"),
+      ],
+    )
 
 
 if __name__ == "__main__":
