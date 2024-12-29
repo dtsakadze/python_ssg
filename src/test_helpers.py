@@ -1,6 +1,20 @@
 import unittest
 
-from helpers import split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link, text_to_textnodes, markdown_to_blocks
+from helpers import (
+  split_nodes_delimiter,
+  extract_markdown_images,
+  extract_markdown_links,
+  split_nodes_image,
+  split_nodes_link,
+  text_to_textnodes,
+  markdown_to_blocks,
+  block_to_block_type,
+  block_type_paragraph,
+  block_type_heading,
+  block_type_code,
+  block_type_quote,
+  block_type_olist,
+  block_type_ulist)
 from textnode import TextType, TextNode
 
 
@@ -101,6 +115,20 @@ This is the same paragraph on a new line
         "* This is a list\n* with items",
       ],
     )
+
+  def test_block_to_block_types(self):
+    block = "# heading"
+    self.assertEqual(block_to_block_type(block), block_type_heading)
+    block = "```\ncode\n```"
+    self.assertEqual(block_to_block_type(block), block_type_code)
+    block = "> quote\n> more quote"
+    self.assertEqual(block_to_block_type(block), block_type_quote)
+    block = "* list\n* items"
+    self.assertEqual(block_to_block_type(block), block_type_ulist)
+    block = "1. list\n2. items"
+    self.assertEqual(block_to_block_type(block), block_type_olist)
+    block = "paragraph"
+    self.assertEqual(block_to_block_type(block), block_type_paragraph)
 
 
 if __name__ == "__main__":
