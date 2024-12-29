@@ -2,7 +2,7 @@ from enum import Enum
 from leafnode import LeafNode
 
 class TextType(Enum):
-  TEXT = 'normal'
+  TEXT = 'text'
   BOLD = 'bold'
   ITALIC = 'italic'
   CODE = 'code'
