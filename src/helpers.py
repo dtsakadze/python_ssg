@@ -12,23 +12,22 @@ block_type_ulist = "unordered_list"
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
   new_nodes = []
-  for node in old_nodes:
-    if node.text_type != TextType.TEXT:
-      new_nodes.append(node)
+  for old_node in old_nodes:
+    if old_node.text_type != TextType.TEXT:
+      new_nodes.append(old_node)
       continue
-    
-    delimeters_count = node.text.count(delimiter)
-    if delimeters_count > 0 and delimeters_count != 2:
-      raise Exception("Closing delimiter not found")
-    
-    split_text_list = node.text.split(delimiter)
-    split_text_list = list(filter(lambda item: item != "", split_text_list))
-
-    for i, text in enumerate(split_text_list):
-      if i == 1:
-        new_nodes.append(TextNode(text, text_type))
+    split_nodes = []
+    sections = old_node.text.split(delimiter)
+    if len(sections) % 2 == 0:
+      raise ValueError("Invalid markdown, formatted section not closed")
+    for i in range(len(sections)):
+      if sections[i] == "":
+        continue
+      if i % 2 == 0:
+        split_nodes.append(TextNode(sections[i], TextType.TEXT))
       else:
-        new_nodes.append(TextNode(text, TextType.TEXT))
+        split_nodes.append(TextNode(sections[i], text_type))
+    new_nodes.extend(split_nodes)
 
   return new_nodes
 
